@@ -64,34 +64,32 @@ String send_request(const char* endpoint, const char* method, String payload) {
     return "";
 }
 
-void send_data(int IR, float temperature, float humidity, float rzero, float correctedRZero, float resistance, float ppm, float correctedPPM){
+void send_data(const SensorData& data) {
     String payload = String("{\n") +
                 "    \"data\": {\n" +
-                "        \"IR\": " + IR + ",\n" +
+                "        \"IR\": " + data.IR_value + ",\n" +
                 "        \"MQ-135\": {\n" +
-                "            \"correctedPPM\": " + correctedPPM + ",\n" +
-                "            \"correctedRZero\": " + correctedRZero + ",\n" +
-                "            \"ppm\": " + ppm + ",\n" +
-                "            \"resistance\": " + resistance + ",\n" +
-                "            \"rzero\": " + rzero + "\n" +
+                "            \"correctedPPM\": " + data.corrected_ppm + ",\n" +
+                "            \"correctedRZero\": " + data.corrected_rzero + ",\n" +
+                "            \"ppm\": " + data.ppm + ",\n" +
+                "            \"resistance\": " + data.resistance + ",\n" +
+                "            \"rzero\": " + data.mq135_rzero + "\n" +
                 "        },\n" +
                 "        \"DHT\": {\n" +
-                "            \"humidity\": " + humidity + ",\n" +
-                "            \"temperature\": " + temperature + "\n" +
-                "        }\n" +  // Remove the extra comma here
+                "            \"humidity\": " + data.humidity + ",\n" +
+                "            \"temperature\": " + data.temperature + "\n" +
+                "        }\n" +
                 "    }\n" +
                 "}\n";
 
-    String response;
-    response = send_request(server_url, "POST", payload);
-    Serial.println("sent");
-    Serial.println(response);
+    
+    send_request(server_url, "POST", payload);
     // return response;
 }
 
-String check_fire(int IR, float temperature, float humidity, float rzero, float correctedRZero, float resistance, float ppm, float correctedPPM) {
+String check_fire(const SensorData& data) {
     String fire_response = "";
-    if(temperature > 10){
+    if (data.temperature > 10) {
         fire_response = send_request(server_url_fire, "GET", "");
         return fire_response;
     }

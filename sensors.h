@@ -14,6 +14,17 @@
 extern DHT dht;
 extern MQ135 mq135_sensor;
 
+struct SensorData {
+    float temperature;
+    float humidity;
+    int IR_value;
+    float mq135_rzero;
+    float corrected_rzero;
+    float resistance;
+    float ppm;
+    float corrected_ppm;
+};
+
 void initSensors();
 void handleLEDAndBuzzer();
 void readAndSendSensorData();
