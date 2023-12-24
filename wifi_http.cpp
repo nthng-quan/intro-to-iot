@@ -66,19 +66,17 @@ String send_request(const char* endpoint, const char* method, String payload) {
 
 void send_data(const SensorData& data) {
     String payload = String("{\n") +
-                "    \"data\": {\n" +
-                "        \"IR\": " + data.IR_value + ",\n" +
-                "        \"MQ-135\": {\n" +
-                "            \"correctedPPM\": " + data.corrected_ppm + ",\n" +
-                "            \"correctedRZero\": " + data.corrected_rzero + ",\n" +
-                "            \"ppm\": " + data.ppm + ",\n" +
-                "            \"resistance\": " + data.resistance + ",\n" +
-                "            \"rzero\": " + data.mq135_rzero + "\n" +
-                "        },\n" +
-                "        \"DHT\": {\n" +
-                "            \"humidity\": " + data.humidity + ",\n" +
-                "            \"temperature\": " + data.temperature + "\n" +
-                "        }\n" +
+                "    \"IR\": " + data.IR_value + ",\n" +
+                "    \"MQ-135\": {\n" +
+                "        \"correctedPPM\": " + data.corrected_ppm + ",\n" +
+                "        \"correctedRZero\": " + data.corrected_rzero + ",\n" +
+                "        \"ppm\": " + data.ppm + ",\n" +
+                "        \"resistance\": " + data.resistance + ",\n" +
+                "        \"rzero\": " + data.mq135_rzero + "\n" +
+                "    },\n" +
+                "    \"DHT\": {\n" +
+                "        \"humidity\": " + data.humidity + ",\n" +
+                "        \"temperature\": " + data.temperature + "\n" +
                 "    }\n" +
                 "}\n";
 
