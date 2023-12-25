@@ -54,8 +54,7 @@ bool check_anomaly(const SensorData& data) {
     //         data.humidity > 30 ||
     //         data.corrected_rzero < 0 ||
     //         data.corrected_ppm > 100);
-    return (data.IR_value == 0 ||
-            data.temperature > 10);
+    return (data.IR_value == 0);
 }
 
 void printSensorData(const SensorData& data) {
@@ -79,7 +78,7 @@ void printSensorData(const SensorData& data) {
     Serial.print("- PPM: ");
     Serial.print(data.ppm);
     Serial.println("ppm");
-    Serial.println("- Corrected PPM: ");
+    Serial.print("- Corrected PPM: ");
     Serial.print(data.corrected_ppm);
     Serial.println("ppm");
     Serial.println("----------------");

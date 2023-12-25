@@ -4,38 +4,32 @@
 
 void setup() {
   Serial.begin(9600);
-  initWiFi();
+  initSensors();
   initServo();
+  initWiFi();
 }
 
 void loop() {
-  // readAndSendSensorData();
-
   SensorData data = readSensorData();
   printSensorData(data);
 
   send_data(data);
 
   if (check_anomaly(data)) {
-    DynamicJsonDocument fire_reponse(512);
-    String response = check_fire(data);
-    DeserializationError error = deserializeJson(fire_reponse, response);
+    String response = init_check_fire(data);
+    DynamicJsonDocument icf_response = parseJson(response, 256);
+    if (icf_response["status"] == "ok") {
+      moveServo(-1);
+      String response = check_fire(data);
+      DynamicJsonDocument fire_response = parseJson(response, 256);
 
-    // Check for parsing errors
-    if (error) {
-      Serial.print(F("JSON parsing failed! Error code: "));
-      Serial.println(error.c_str());
-      return;
+      if (fire_response["fire"] == 1) {
+        Serial.println("!!! Fire detected !!!");
+        handleLEDAndBuzzer();
+      } else if (fire_response["fire"] == 0) {
+        Serial.println("No fire detected -> servo resting");
+        // moveServo(-1);
+      }
     }
-
-    if (fire_reponse["fire"] == 1) {
-      Serial.println("Fire detected -> servo moving");
-      moveServo(1);
-      handleLEDAndBuzzer();
-    } else if (fire_reponse["fire"] == 0) {
-      Serial.println("No fire detected -> servo resting");
-    }
-  } else {
-    moveServo(-1);
   }
 }

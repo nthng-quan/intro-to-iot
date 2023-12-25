@@ -14,7 +14,9 @@ extern const char *server_url_fire;
 
 void initWiFi();
 void send_data(const SensorData &data);
+String init_check_fire(const SensorData &data);
 String check_fire(const SensorData &data);
+DynamicJsonDocument parseJson(const String& jsonString, size_t capacity);
 String send_request(const char *endpoint, const char *method, String payload);
 
 #endif

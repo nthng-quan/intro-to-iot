@@ -20,6 +20,21 @@ void initWiFi() {
   Serial.println("WiFi connected");
 }
 
+DynamicJsonDocument parseJson(const String& jsonString, size_t capacity) {
+  DynamicJsonDocument jsonDoc(capacity); // Adjust the size based on your JSON data
+
+  // Deserialize the JSON data
+  DeserializationError error = deserializeJson(jsonDoc, jsonString);
+
+  // Check for parsing errors
+  if (error) {
+    Serial.print(F("JSON parsing failed! Error code: "));
+    Serial.println(error.c_str());
+  }
+
+  return jsonDoc;
+}
+
 String send_request(const char* endpoint, const char* method, String payload) {
     if ((WiFi.status() == WL_CONNECTED)) {
         WiFiClient wifi_client;
@@ -83,6 +98,11 @@ void send_data(const SensorData& data) {
     
     send_request(server_url, "POST", payload);
     // return response;
+}
+
+String init_check_fire(const SensorData &data) {
+    String fire_response = send_request(server_url_fire, "POST", "check");
+    return fire_response;
 }
 
 String check_fire(const SensorData& data) {
