@@ -25,8 +25,10 @@ struct SensorData {
     float corrected_ppm;
 };
 
+SensorData readSensorData();
 void initSensors();
 void handleLEDAndBuzzer();
-void readAndSendSensorData();
+bool check_anomaly(const SensorData& data);
+void printSensorData(const SensorData& data);
 
 #endif

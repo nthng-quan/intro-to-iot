@@ -1,5 +1,7 @@
 #include "sensors.h"
-#include "wifi_http.h"
+
+DHT dht(DHTPIN, DHTTYPE);
+MQ135 mq135_sensor(MQ135_PIN);
 
 SensorData readSensorData() {
     SensorData data;
@@ -25,10 +27,6 @@ SensorData readSensorData() {
     return data;
 }
 
-
-DHT dht(DHTPIN, DHTTYPE);
-MQ135 mq135_sensor(MQ135_PIN);
-
 void initSensors() {
     pinMode(IR_PIN, INPUT);
     pinMode(BUZZER_PIN, OUTPUT);
@@ -50,35 +48,39 @@ void handleLEDAndBuzzer() {
     delay(50);
 }
 
-void readAndSendSensorData() {
-    SensorData data = readSensorData();
+bool check_anomaly(const SensorData& data) {
+    // return (data.IR_value == 1 ||
+    //         data.temperature > 35 ||
+    //         data.humidity > 30 ||
+    //         data.corrected_rzero < 0 ||
+    //         data.corrected_ppm > 100);
+    return (data.IR_value == 0 ||
+            data.temperature > 10);
+}
 
-    Serial.println("DHT11: ");
+void printSensorData(const SensorData& data) {
+    Serial.println("--- DHT11 ---");
     Serial.print("- Temperature: ");
     Serial.println(data.temperature);
     Serial.print("- Humidity: ");
     Serial.println(data.humidity);
 
-    Serial.print("IR sensor value: ");
+    Serial.print("* IR sensor value: ");
     Serial.println(data.IR_value);
 
-    Serial.println("---MQ135---");
-    Serial.print("MQ135 RZero: ");
+    Serial.println("--- MQ135 ---");
+    Serial.print("- MQ135 RZero: ");
     Serial.println(data.mq135_rzero);
-    Serial.print("Corrected RZero: ");
+    Serial.print("- Corrected RZero: ");
     Serial.println(data.corrected_rzero);
-    Serial.print("Resistance: ");
+    Serial.print("- Resistance: ");
     Serial.println(data.resistance);
 
-    Serial.print("PPM: ");
+    Serial.print("- PPM: ");
     Serial.print(data.ppm);
     Serial.println("ppm");
-
-    Serial.println("Corrected PPM: ");
+    Serial.println("- Corrected PPM: ");
     Serial.print(data.corrected_ppm);
     Serial.println("ppm");
     Serial.println("----------------");
-
-    send_data(data);
-    String fire_response = check_fire(data);
 }

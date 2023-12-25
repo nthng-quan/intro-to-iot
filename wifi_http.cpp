@@ -86,10 +86,6 @@ void send_data(const SensorData& data) {
 }
 
 String check_fire(const SensorData& data) {
-    String fire_response = "";
-    if (data.temperature > 10) {
-        fire_response = send_request(server_url_fire, "GET", "");
-        return fire_response;
-    }
-    return "";
+    String fire_response = send_request(server_url_fire, "GET", "");
+    return fire_response;
 }
