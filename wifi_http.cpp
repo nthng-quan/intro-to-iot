@@ -99,7 +99,6 @@ void send_data(const SensorData& data) {
 
     
     send_request(server_url, "POST", payload);
-    // return response;
 }
 
 String init_check_fire(const SensorData &data) {
@@ -146,5 +145,4 @@ void send_notification(const SensorData& data, const String& fire, const String&
                 "}\n";
     
     send_request(web_url, "POST", payload);
-    // return response;
 }
