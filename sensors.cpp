@@ -57,6 +57,15 @@ bool check_anomaly(const SensorData& data) {
     return (data.IR_value == 0);
 }
 
+bool check_difference(const SensorData& data) {
+    return (data.IR_value != global_IR_value  ||
+            data.temperature != global_temperature ||
+            data.humidity != global_humidity ||
+            data.corrected_rzero != global_correctedRZero ||
+            data.corrected_ppm != global_correctedppm ||
+            data.resistance != global_resistance);
+}
+
 void printSensorData(const SensorData& data) {
     Serial.println("--- DHT11 ---");
     Serial.print("- Temperature: ");

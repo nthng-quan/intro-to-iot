@@ -4,6 +4,7 @@ const char *ssid = "24hqiot";
 const char *pass = "26102002";
 const char* server_url = "http://192.168.1.5:5555/upload";
 const char* server_url_fire = "http://192.168.1.5:5555/fire";
+const char* web_url = "http://192.168.ronaldo.messi/fire"
 
 void initWiFi() {
   delay(10);
@@ -108,4 +109,28 @@ String init_check_fire(const SensorData &data) {
 String check_fire(const SensorData& data) {
     String fire_response = send_request(server_url_fire, "GET", "");
     return fire_response;
+}
+
+String send_notification(const SensorData& data, const int fire) {
+    String payload = String("{\n") +
+                "    \"IR\": " + data.IR_value + ",\n" +
+                "    \"MQ-135\": {\n" +
+                "        \"correctedPPM\": " + data.corrected_ppm + ",\n" +
+                "        \"correctedRZero\": " + data.corrected_rzero + ",\n" +
+                "        \"ppm\": " + data.ppm + ",\n" +
+                "        \"resistance\": " + data.resistance + ",\n" +
+                "        \"rzero\": " + data.mq135_rzero + "\n" +
+                "    },\n" +
+                "    \"DHT\": {\n" +
+                "        \"humidity\": " + data.humidity + ",\n" +
+                "        \"temperature\": " + data.temperature + "\n" +
+                "    },\n" +
+                "    \"Fire\": {\n" +
+                "        \"fire\": " + fire + "\n" +
+                "    }\n" +
+                "}\n";
+
+    
+    send_request(web_url, "POST", payload);
+    // return response;
 }
