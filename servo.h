@@ -3,13 +3,13 @@
 
 #include <Servo.h>
 
-#define servo_neck_pin D3
-#define servo_base_pin D5
+#define servo_base_pin D3
+#define servo_neck_pin D5
 
 extern Servo servo_base;
 extern Servo servo_neck;
 
 void initServo();
-void moveServo(int neck_pos);
+void moveServo();
 
 #endif

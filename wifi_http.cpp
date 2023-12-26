@@ -20,21 +20,6 @@ void initWiFi() {
   Serial.println("WiFi connected");
 }
 
-DynamicJsonDocument parseJson(const String& jsonString, size_t capacity) {
-  DynamicJsonDocument jsonDoc(capacity); // Adjust the size based on your JSON data
-
-  // Deserialize the JSON data
-  DeserializationError error = deserializeJson(jsonDoc, jsonString);
-
-  // Check for parsing errors
-  if (error) {
-    Serial.print(F("JSON parsing failed! Error code: "));
-    Serial.println(error.c_str());
-  }
-
-  return jsonDoc;
-}
-
 String send_request(const char* endpoint, const char* method, String payload) {
     if ((WiFi.status() == WL_CONNECTED)) {
         WiFiClient wifi_client;
@@ -79,33 +64,36 @@ String send_request(const char* endpoint, const char* method, String payload) {
     return "";
 }
 
-void send_data(const SensorData& data) {
+void send_data(int IR, float temperature, float humidity, float rzero, float correctedRZero, float resistance, float ppm, float correctedPPM){
     String payload = String("{\n") +
-                "    \"IR\": " + data.IR_value + ",\n" +
-                "    \"MQ-135\": {\n" +
-                "        \"correctedPPM\": " + data.corrected_ppm + ",\n" +
-                "        \"correctedRZero\": " + data.corrected_rzero + ",\n" +
-                "        \"ppm\": " + data.ppm + ",\n" +
-                "        \"resistance\": " + data.resistance + ",\n" +
-                "        \"rzero\": " + data.mq135_rzero + "\n" +
-                "    },\n" +
-                "    \"DHT\": {\n" +
-                "        \"humidity\": " + data.humidity + ",\n" +
-                "        \"temperature\": " + data.temperature + "\n" +
+                "    \"data\": {\n" +
+                "        \"IR\": " + IR + ",\n" +
+                "        \"MQ-135\": {\n" +
+                "            \"correctedPPM\": " + correctedPPM + ",\n" +
+                "            \"correctedRZero\": " + correctedRZero + ",\n" +
+                "            \"ppm\": " + ppm + ",\n" +
+                "            \"resistance\": " + resistance + ",\n" +
+                "            \"rzero\": " + rzero + "\n" +
+                "        },\n" +
+                "        \"DHT\": {\n" +
+                "            \"humidity\": " + humidity + ",\n" +
+                "            \"temperature\": " + temperature + "\n" +
+                "        }\n" +  // Remove the extra comma here
                 "    }\n" +
                 "}\n";
 
-    
-    send_request(server_url, "POST", payload);
+    String response;
+    response = send_request(server_url, "POST", payload);
+    Serial.println("sent");
+    Serial.println(response);
     // return response;
 }
 
-String init_check_fire(const SensorData &data) {
-    String fire_response = send_request(server_url_fire, "POST", "check");
-    return fire_response;
-}
-
-String check_fire(const SensorData& data) {
-    String fire_response = send_request(server_url_fire, "GET", "");
-    return fire_response;
+String check_fire(int IR, float temperature, float humidity, float rzero, float correctedRZero, float resistance, float ppm, float correctedPPM) {
+    String fire_response = "";
+    if(temperature > 10){
+        fire_response = send_request(server_url_fire, "GET", "");
+        return fire_response;
+    }
+    return "";
 }
