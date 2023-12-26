@@ -4,6 +4,7 @@ const char *ssid = "24hqiot";
 const char *pass = "26102002";
 const char* server_url = "http://192.168.1.5:5555/upload";
 const char* server_url_fire = "http://192.168.1.5:5555/fire";
+const char* server_url_config = "http://192.168.1.5:5555/config";
 const char* web_url = "http://192.168.1.5:5555/fire"; // IP node-red:
 
 void initWiFi() {
@@ -109,6 +110,19 @@ String init_check_fire(const SensorData &data) {
 String check_fire(const SensorData& data) {
     String fire_response = send_request(server_url_fire, "GET", "");
     return fire_response;
+}
+
+Config get_config(const SensorData& data) {
+    String config = send_request(server_url_config, "GET", "");
+    DynamicJsonDocument config_response = parseJson(config, 256);
+    Config config_data = {
+        config_response["servo"],
+        config_response["ppm_thrsh"],
+        config_response["rzero_thrsh"],
+        config_response["temp_thrsh"],
+        config_response["hum_thrsh"]
+    };
+    return config_data;
 }
 
 void send_notification(const SensorData& data, const String& fire, const String& img_url) {

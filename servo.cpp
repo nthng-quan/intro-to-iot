@@ -8,7 +8,12 @@ void initServo() {
   servo_neck.attach(servo_neck_pin);
 }
 
-void moveServo(int position) {
-  servo_neck.write(90);
-  servo_base.write(position);
+void moveServo(int neck_pos, int position, const String& servo_cfg) {
+  if (servo_cfg == "partial") {
+    servo_neck.write(neck_pos);
+    servo_base.write(position); 
+  } else if (servo_cfg == "full") {
+    servo_neck.write(position);
+    servo_base.write(position); 
+  }
 }

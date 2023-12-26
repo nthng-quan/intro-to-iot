@@ -3,13 +3,29 @@
 DHT dht(DHTPIN, DHTTYPE);
 MQ135 mq135_sensor(MQ135_PIN);
 
-// int fireornot = -1;
-// float global_correctedRZero = -1;
-// float global_resistance = -1;
-// float global_correctedppm = -1;
-// float global_humidity = -1;
-// float global_temperature = -1;
-// float global_IR_value = -1;
+bool compare(const SensorData& data1, const SensorData& data2) {
+    return (
+        data1.temperature != data2.temperature ||
+        data1.humidity != data2.humidity ||
+        data1.IR_value != data2.IR_value ||
+        data1.mq135_rzero != data2.mq135_rzero ||
+        data1.corrected_rzero != data2.corrected_rzero ||
+        data1.resistance != data2.resistance ||
+        data1.ppm != data2.ppm ||
+        data1.corrected_ppm != data2.corrected_ppm
+    );
+}
+
+void copy(SensorData& dest, const SensorData& src) {
+    dest.temperature = src.temperature;
+    dest.humidity = src.humidity;
+    dest.IR_value = src.IR_value;
+    dest.mq135_rzero = src.mq135_rzero;
+    dest.corrected_rzero = src.corrected_rzero;
+    dest.resistance = src.resistance;
+    dest.ppm = src.ppm;
+    dest.corrected_ppm = src.corrected_ppm;
+}
 
 SensorData readSensorData() {
     SensorData data;
@@ -56,23 +72,13 @@ void handleLEDAndBuzzer() {
     delay(50);
 }
 
-bool check_anomaly(const SensorData& data) {
-    // return (data.IR_value == 1 ||
-    //         data.temperature > 35 ||
-    //         data.humidity > 30 ||
-    //         data.corrected_rzero < 0 ||
-    //         data.corrected_ppm > 100);
-    return (data.IR_value == 0);
+bool check_anomaly(const SensorData& data, const Config& config) {
+    return (data.IR_value == 0 ||
+            data.temperature > config.temp_thrsh ||
+            data.humidity > config.hum_thrsh ||
+            data.corrected_rzero < config.rzero_thrsh ||
+            data.corrected_ppm > config.ppm_thrsh);
 }
-
-// bool check_difference(const SensorData& data) {
-//     return (data.IR_value != global_IR_value  ||
-//             data.temperature != global_temperature ||
-//             data.humidity != global_humidity ||
-//             data.corrected_rzero != global_correctedRZero ||
-//             data.corrected_ppm != global_correctedppm ||
-//             data.resistance != global_resistance);
-// }
 
 void printSensorData(const SensorData& data) {
     Serial.println("--- DHT11 ---");
