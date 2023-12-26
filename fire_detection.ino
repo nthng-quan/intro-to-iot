@@ -39,7 +39,7 @@ void loop() {
       String img_url = fire_response["url"];
 
       if (fire_response["fire"] == 1) {
-        Serial.println("!!! Fire detected !!!");
+        Serial.println("!!!! Fire detected !!!!");
         handleLEDAndBuzzer();
         send_notification(data, fire, img_url);
         break;
