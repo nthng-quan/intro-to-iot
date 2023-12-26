@@ -14,13 +14,13 @@
 extern DHT dht;
 extern MQ135 mq135_sensor;
 
-int fireornot = -1;
-float global_correctedRZero = -1;
-float global_resistance = -1;
-float global_correctedppm = -1;
-float global_humidity = -1;
-float global_temperature = -1;
-float global_IR_value = -1;
+// extern int fireornot;
+// extern float global_correctedRZero;
+// extern float global_resistance;
+// extern float global_correctedppm;
+// extern float global_humidity;
+// extern float global_temperature;
+// extern float global_IR_value;
 
 struct SensorData {
     float temperature;
@@ -37,6 +37,7 @@ SensorData readSensorData();
 void initSensors();
 void handleLEDAndBuzzer();
 bool check_anomaly(const SensorData& data);
+// bool check_difference(const SensorData& data);
 void printSensorData(const SensorData& data);
 
 #endif

@@ -3,6 +3,14 @@
 DHT dht(DHTPIN, DHTTYPE);
 MQ135 mq135_sensor(MQ135_PIN);
 
+// int fireornot = -1;
+// float global_correctedRZero = -1;
+// float global_resistance = -1;
+// float global_correctedppm = -1;
+// float global_humidity = -1;
+// float global_temperature = -1;
+// float global_IR_value = -1;
+
 SensorData readSensorData() {
     SensorData data;
 
@@ -42,7 +50,7 @@ void handleLEDAndBuzzer() {
     delay(100);
 
     // Buzzer
-    tone(BUZZER_PIN, 1000);
+    tone(BUZZER_PIN, 500);
     delay(50);
     noTone(BUZZER_PIN);
     delay(50);
@@ -57,14 +65,14 @@ bool check_anomaly(const SensorData& data) {
     return (data.IR_value == 0);
 }
 
-bool check_difference(const SensorData& data) {
-    return (data.IR_value != global_IR_value  ||
-            data.temperature != global_temperature ||
-            data.humidity != global_humidity ||
-            data.corrected_rzero != global_correctedRZero ||
-            data.corrected_ppm != global_correctedppm ||
-            data.resistance != global_resistance);
-}
+// bool check_difference(const SensorData& data) {
+//     return (data.IR_value != global_IR_value  ||
+//             data.temperature != global_temperature ||
+//             data.humidity != global_humidity ||
+//             data.corrected_rzero != global_correctedRZero ||
+//             data.corrected_ppm != global_correctedppm ||
+//             data.resistance != global_resistance);
+// }
 
 void printSensorData(const SensorData& data) {
     Serial.println("--- DHT11 ---");
