@@ -14,6 +14,14 @@
 extern DHT dht;
 extern MQ135 mq135_sensor;
 
+int fireornot = -1;
+float global_correctedRZero = -1;
+float global_resistance = -1;
+float global_correctedppm = -1;
+float global_humidity = -1;
+float global_temperature = -1;
+float global_IR_value = -1;
+
 struct SensorData {
     float temperature;
     float humidity;
