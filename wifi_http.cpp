@@ -119,7 +119,7 @@ Config get_config(const SensorData& data) {
         config_response["ppm_thrsh"],
         config_response["rzero_thrsh"],
         config_response["temp_thrsh"],
-        config_response["hum_thrsh"]
+        config_response["hum_thrsh"] 
     };
     return config_data;
 }
