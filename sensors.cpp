@@ -33,9 +33,9 @@ SensorData readSensorData() {
     // DHT11
     data.humidity = dht.readHumidity();
     data.temperature = dht.readTemperature();
-    if (isnan(data.humidity) || isnan(data.temperature)) {
+    if (isnan(data.humidity) || isnan(data.temperature) || data.humidity > 110 || data.temperature > 110) {
         Serial.println("Failed to read from DHT!");
-        return data;
+        return { -1, -1, -1, -1, -1, -1, -1, -1};
     }
 
     // IR sensor

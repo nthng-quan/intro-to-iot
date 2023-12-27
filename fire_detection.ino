@@ -14,11 +14,30 @@ void setup() {
 
 void loop() {
   SensorData data = readSensorData();
+  if (data.temperature == -1) {
+    return;
+  }
   Config config = get_config(data);
   // printSensorData(data);
   send_data(data);
 
   if (check_anomaly(data, config) && compare(global_data, data)) {
+    String payload = String("{\n") +
+            "    \"IR\": " + data.IR_value + ",\n" +
+            "    \"MQ-135\": {\n" +
+            "        \"correctedPPM\": " + data.corrected_ppm + ",\n" +
+            "        \"correctedRZero\": " + data.corrected_rzero + ",\n" +
+            "        \"ppm\": " + data.ppm + ",\n" +
+            "        \"resistance\": " + data.resistance + ",\n" +
+            "        \"rzero\": " + data.mq135_rzero + "\n" +
+            "    },\n" +
+            "    \"DHT\": {\n" +
+            "        \"humidity\": " + data.humidity + ",\n" +
+            "        \"temperature\": " + data.temperature + "\n" +
+            "    }\n" +
+            "}\n";
+    send_request("http://192.168.1.5:5555/fire", "POST", payload);
+    Serial.println("*** Abnormal data detected!!!");
     copy(global_data, data);
 
     String response;
