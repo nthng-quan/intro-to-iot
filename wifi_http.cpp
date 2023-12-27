@@ -115,7 +115,7 @@ Config get_config(const SensorData& data) {
     String config = send_request(server_url_config, "GET", "");
     DynamicJsonDocument config_response = parseJson(config, 256);
     Config config_data = {
-        config_response["servo"],
+        int(config_response["servo"]),
         float(config_response["corrected_ppm"]),
         float(config_response["corrected_rzero"]),
         int(config_response["temperature"]),

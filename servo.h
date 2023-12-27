@@ -10,6 +10,6 @@ extern Servo servo_base;
 extern Servo servo_neck;
 
 void initServo();
-void moveServo(int neck_pos, int position, const String& servo_cfg);
+void moveServo(const int& neck_pos, const int& base_pos);
 
 #endif

@@ -26,7 +26,7 @@ struct SensorData {
 };
 
 struct Config {
-  String servo;
+  int servo;
   float ppm_thrsh;
   float rzero_thrsh;
   int temp_thrsh;
