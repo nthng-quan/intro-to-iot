@@ -2,7 +2,6 @@
 #include "servo.h"
 #include "sensors.h"
 
-int fireornot = -1;
 SensorData global_data = { -1, -1, -1, -1, -1, -1, -1, -1 };
 
 void setup() {
@@ -37,19 +36,19 @@ void loop() {
     for (int i = 0; i <= 180; i+=60) {
       moveServo(config.servo, i);
 
-      String response = check_fire(data);
+      String response = check_fire(data, config.servo, i);
       DynamicJsonDocument fire_response = parseJson(response, 256);
-      fireornot = fire_response["fire"];
-      String fire = fire_response["fire"];
+
+      int fire = (int)fire_response["fire"];
       String img_url = fire_response["url"];
 
-      if (fire_response["fire"] == 1) {
+      if (fire == 1) {
         Serial.println("!!!! Fire detected !!!!");
         handleLEDAndBuzzer();
         send_notification(data, fire, img_url);
         break;
       } 
-      else if (fire_response["fire"] == 0) {
+      else if (fire == 0) {
         Serial.println("No fire detected -> servo resting");
       }
       send_notification(data, fire, img_url);

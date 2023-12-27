@@ -106,8 +106,26 @@ String init_check_fire(const SensorData &data) {
     return icf_response;
 }
 
-String check_fire(const SensorData& data) {
-    String fire_response = send_request(server_url_fire, "GET", "");
+String check_fire(const SensorData& data, const int& neck_pos, const int& base_pos) {
+    String payload = String("{\n") +
+        "    \"IR\": " + data.IR_value + ",\n" +
+        "    \"MQ-135\": {\n" +
+        "        \"correctedPPM\": " + data.corrected_ppm + ",\n" +
+        "        \"correctedRZero\": " + data.corrected_rzero + ",\n" +
+        "        \"ppm\": " + data.ppm + ",\n" +
+        "        \"resistance\": " + data.resistance + ",\n" +
+        "        \"rzero\": " + data.mq135_rzero + "\n" +
+        "    },\n" +
+        "    \"DHT\": {\n" +
+        "        \"humidity\": " + data.humidity + ",\n" +
+        "        \"temperature\": " + data.temperature + "\n" +
+        "    },\n" +
+        "    \"servo\": {\n" +
+        "        \"neck_pos\": " + neck_pos + ",\n" +
+        "        \"base_pos\": " + base_pos + "\n" +
+        "    }\n" +
+        "}\n";
+    String fire_response = send_request(server_url_fire, "POST", payload);
     return fire_response;
 }
 
@@ -124,7 +142,7 @@ Config get_config(const SensorData& data) {
     return config_data;
 }
 
-void send_notification(const SensorData& data, const String& fire, const String& img_url) {
+void send_notification(const SensorData& data, const int& fire, const String& img_url) {
     String payload = String("{\n") +
                 "    \"IR\": " + data.IR_value + ",\n" +
                 "    \"MQ-135\": {\n" +
