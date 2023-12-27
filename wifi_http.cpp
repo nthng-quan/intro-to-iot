@@ -116,10 +116,10 @@ Config get_config(const SensorData& data) {
     DynamicJsonDocument config_response = parseJson(config, 256);
     Config config_data = {
         config_response["servo"],
-        config_response["ppm_thrsh"],
-        config_response["rzero_thrsh"],
-        config_response["temp_thrsh"],
-        config_response["hum_thrsh"] 
+        float(config_response["corrected_ppm"]),
+        float(config_response["corrected_rzero"]),
+        int(config_response["temperature"]),
+        int(config_response["humidity"])
     };
     return config_data;
 }

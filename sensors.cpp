@@ -75,20 +75,20 @@ void handleLEDAndBuzzer() {
 bool check_anomaly(const SensorData& data, const Config& config) {
     return (data.IR_value == 0 ||
             data.temperature > config.temp_thrsh ||
-            data.humidity > config.hum_thrsh ||
+            data.humidity < config.hum_thrsh ||
             data.corrected_rzero < config.rzero_thrsh ||
             data.corrected_ppm > config.ppm_thrsh);
 }
 
 void printSensorData(const SensorData& data) {
+    Serial.print("* IR sensor value: ");
+    Serial.println(data.IR_value);
+
     Serial.println("--- DHT11 ---");
     Serial.print("- Temperature: ");
     Serial.println(data.temperature);
     Serial.print("- Humidity: ");
     Serial.println(data.humidity);
-
-    Serial.print("* IR sensor value: ");
-    Serial.println(data.IR_value);
 
     Serial.println("--- MQ135 ---");
     Serial.print("- MQ135 RZero: ");
@@ -97,12 +97,11 @@ void printSensorData(const SensorData& data) {
     Serial.println(data.corrected_rzero);
     Serial.print("- Resistance: ");
     Serial.println(data.resistance);
-
     Serial.print("- PPM: ");
     Serial.print(data.ppm);
     Serial.println("ppm");
     Serial.print("- Corrected PPM: ");
     Serial.print(data.corrected_ppm);
     Serial.println("ppm");
-    Serial.println("----------------");
+    Serial.println("-------------");
 }

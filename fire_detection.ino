@@ -15,7 +15,7 @@ void setup() {
 void loop() {
   SensorData data = readSensorData();
   Config config = get_config(data);
-  printSensorData(data);
+  // printSensorData(data);
   send_data(data);
 
   if (check_anomaly(data, config) && compare(global_data, data)) {
