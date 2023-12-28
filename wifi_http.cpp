@@ -2,9 +2,10 @@
 
 const char *ssid = "24hqiot";
 const char *pass = "26102002";
-const char* server_url = "http://192.168.1.5:5555/upload";
+const char* server_url = "http://192.168.1.5:5555/system";
 const char* server_url_fire = "http://192.168.1.5:5555/fire";
 const char* server_url_config = "http://192.168.1.5:5555/config";
+
 const char* web_url = "http://192.168.1.5:5555/fire"; // IP node-red:
 
 void initWiFi() {
