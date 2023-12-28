@@ -106,7 +106,7 @@ String init_check_fire(const SensorData &data) {
     return icf_response;
 }
 
-String check_fire(const SensorData& data, const int& neck_pos, const int& base_pos) {
+String check_fire(const SensorData& data, const int& base_pos, const int& neck_pos) {
     String payload = String("{\n") +
         "    \"IR\": " + data.IR_value + ",\n" +
         "    \"MQ-135\": {\n" +

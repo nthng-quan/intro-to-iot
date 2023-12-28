@@ -42,7 +42,7 @@ void loop() {
       moveServo(i, config.servo_neck);
       delay(1000);
 
-      String response = check_fire(data, config.servo_base, config.servo_neck);
+      String response = check_fire(data, i, config.servo_neck);
       DynamicJsonDocument fire_response = parseJson(response, 256);
 
       fire = (int)fire_response["fire"];
