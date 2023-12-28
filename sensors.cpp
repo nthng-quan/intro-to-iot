@@ -64,20 +64,37 @@ void handleLEDAndBuzzer() {
     delay(100);
     digitalWrite(LED_PIN, LOW);
     delay(100);
-
-    // Buzzer
-    tone(BUZZER_PIN, 500);
-    delay(50);
-    noTone(BUZZER_PIN);
-    delay(50);
+    
+    // Bugzzer
+    digitalWrite(BUZZER_PIN, HIGH);
+    delay(100);
+    digitalWrite(BUZZER_PIN, LOW);
+    delay(100);
 }
 
-bool check_anomaly(const SensorData& data, const Config& config) {
-    return (data.IR_value == 0 ||
-            data.temperature > config.temp_thrsh ||
-            data.humidity < config.hum_thrsh ||
-            data.corrected_rzero < config.rzero_thrsh ||
-            data.corrected_ppm > config.ppm_thrsh);
+bool check_anomaly(const SensorData& data, const Config& config) { // more verbose
+    if (data.IR_value == 0) {
+        Serial.println("*** IR sensor value is 0");
+        return true;
+    }
+    if (data.temperature > config.temp_thrsh) {
+        Serial.println("*** Temperature is higher than threshold");
+        return true;
+    }
+    if (data.humidity < config.hum_thrsh) {
+        Serial.println("*** Humidity is lower than threshold");
+        return true;
+    }
+    if (data.corrected_rzero < config.rzero_thrsh) {
+        Serial.println("*** Corrected RZero is lower than threshold");
+        return true;
+    }
+    if (data.corrected_ppm > config.ppm_thrsh) {
+        Serial.println("*** Corrected PPM is higher than threshold");
+        return true;
+    }
+
+    return false;
 }
 
 void printSensorData(const SensorData& data) {

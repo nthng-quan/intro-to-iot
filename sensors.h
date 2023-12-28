@@ -26,11 +26,12 @@ struct SensorData {
 };
 
 struct Config {
-  int servo;
-  float ppm_thrsh;
-  float rzero_thrsh;
-  int temp_thrsh;
-  int hum_thrsh;
+    int servo_neck;
+    int servo_base;
+    float ppm_thrsh;
+    float rzero_thrsh;
+    int temp_thrsh;
+    int hum_thrsh;
 }; 
 
 SensorData readSensorData();

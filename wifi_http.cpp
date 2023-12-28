@@ -129,11 +129,12 @@ String check_fire(const SensorData& data, const int& neck_pos, const int& base_p
     return fire_response;
 }
 
-Config get_config(const SensorData& data) {
+Config get_config() {
     String config = send_request(server_url_config, "GET", "");
     DynamicJsonDocument config_response = parseJson(config, 256);
     Config config_data = {
-        int(config_response["servo"]),
+        int(config_response["servo_neck"]),
+        int(config_response["servo_base"]),
         float(config_response["corrected_ppm"]),
         float(config_response["corrected_rzero"]),
         int(config_response["temperature"]),
