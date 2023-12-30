@@ -5,8 +5,6 @@
 #include <MQ135.h>
 
 #define IR_PIN D2
-#define BUZZER_PIN D1
-#define LED_PIN D0
 #define DHTPIN D7
 #define DHTTYPE DHT11
 #define MQ135_PIN A0
@@ -35,14 +33,13 @@ struct Config {
 }; 
 
 SensorData readSensorData();
-bool compare(const SensorData& data1, const SensorData& data2);
+bool compare(const SensorData& data1, const SensorData& data2, const String& scope);
 void copy(SensorData& dest, const SensorData& src);
 
 bool compare(Config& config1, Config& config2, const String& scope);
 void copy(Config& dest, const Config& src);
 
 void initSensors();
-void handleLEDAndBuzzer();
 bool check_anomaly(const SensorData& data, const Config& config);
 void printSensorData(const SensorData& data);
 

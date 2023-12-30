@@ -3,7 +3,21 @@
 DHT dht(DHTPIN, DHTTYPE);
 MQ135 mq135_sensor(MQ135_PIN);
 
-bool compare(const SensorData& data1, const SensorData& data2) {
+bool compare(const SensorData& data1, const SensorData& data2, const String& scope) {
+    if (scope == "dht") {
+        return (
+            data1.temperature != data2.temperature ||
+            data1.humidity != data2.humidity
+        );
+    } else if (scope == "mq135") {
+        return (
+            data1.mq135_rzero != data2.mq135_rzero ||
+            data1.corrected_rzero != data2.corrected_rzero ||
+            data1.resistance != data2.resistance ||
+            data1.ppm != data2.ppm ||
+            data1.corrected_ppm != data2.corrected_ppm
+        );
+    }
     return (
         data1.temperature != data2.temperature ||
         data1.humidity != data2.humidity ||
@@ -33,16 +47,15 @@ bool compare(Config& config1, Config& config2, const String& scope) {
             config1.servo_base != config2.servo_base ||
             config1.servo_neck != config2.servo_neck
         );
-    } else {
-        return (
-            config1.servo_base != config2.servo_base ||
-            config1.servo_neck != config2.servo_neck ||
-            config1.ppm_thrsh != config2.ppm_thrsh ||
-            config1.rzero_thrsh != config2.rzero_thrsh ||
-            config1.temp_thrsh != config2.temp_thrsh ||
-            config1.hum_thrsh != config2.hum_thrsh
-        );
     }
+    return (
+        config1.servo_base != config2.servo_base ||
+        config1.servo_neck != config2.servo_neck ||
+        config1.ppm_thrsh != config2.ppm_thrsh ||
+        config1.rzero_thrsh != config2.rzero_thrsh ||
+        config1.temp_thrsh != config2.temp_thrsh ||
+        config1.hum_thrsh != config2.hum_thrsh
+    );
 }
 
 void copy(Config& dest, const Config& src) {
@@ -80,24 +93,9 @@ SensorData readSensorData() {
 
 void initSensors() {
     pinMode(IR_PIN, INPUT);
-    pinMode(BUZZER_PIN, OUTPUT);
-    pinMode(LED_PIN, OUTPUT);
     dht.begin();
 }
 
-void handleLEDAndBuzzer() {
-    // LED
-    digitalWrite(LED_PIN, HIGH);
-    delay(100);
-    digitalWrite(LED_PIN, LOW);
-    delay(100);
-    
-    // Bugzzer
-    digitalWrite(BUZZER_PIN, HIGH);
-    delay(100);
-    digitalWrite(BUZZER_PIN, LOW);
-    delay(100);
-}
 
 bool check_anomaly(const SensorData& data, const Config& config) { // more verbose
     if (data.IR_value == 0) {

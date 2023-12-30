@@ -96,7 +96,7 @@ String send_request(const char* endpoint, const char* method, String payload) {
 void send_data(const SensorData& data) {
     String payload = String("{\n") +
                 "    \"IR\": " + data.IR_value + ",\n" +
-                "    \"MQ-135\": {\n" +
+                "    \"MQ_135\": {\n" +
                 "        \"correctedPPM\": " + data.corrected_ppm + ",\n" +
                 "        \"correctedRZero\": " + data.corrected_rzero + ",\n" +
                 "        \"ppm\": " + data.ppm + ",\n" +
@@ -124,7 +124,7 @@ String init_check_fire(const SensorData &data) {
 String check_fire(const SensorData& data, const int& base_pos, const int& neck_pos) {
     String payload = String("{\n") +
         "    \"IR\": " + data.IR_value + ",\n" +
-        "    \"MQ-135\": {\n" +
+        "    \"MQ_135\": {\n" +
         "        \"correctedPPM\": " + data.corrected_ppm + ",\n" +
         "        \"correctedRZero\": " + data.corrected_rzero + ",\n" +
         "        \"ppm\": " + data.ppm + ",\n" +
@@ -167,7 +167,7 @@ Config get_config() {
 void send_notification(const SensorData& data, const int& fire, const String& img_url) {
     String payload = String("{\n") +
                 "    \"IR\": " + data.IR_value + ",\n" +
-                "    \"MQ-135\": {\n" +
+                "    \"MQ_135\": {\n" +
                 "        \"correctedPPM\": " + data.corrected_ppm + ",\n" +
                 "        \"correctedRZero\": " + data.corrected_rzero + ",\n" +
                 "        \"ppm\": " + data.ppm + ",\n" +
@@ -180,8 +180,8 @@ void send_notification(const SensorData& data, const int& fire, const String& im
                 "    },\n" +
                 "    \"check_fire\": {\n" +
                 "        \"fire\": " + fire + ",\n" +
-                "        \"img_url\": " + img_url + "\n" +
-                "    },\n" +
+                "        \"img_url\": \"" + img_url + "\"\n" +
+                "    }\n" +
                 "}\n";
     
     send_request(nodered_url, "POST", payload);
