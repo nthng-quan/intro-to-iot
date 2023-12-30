@@ -3,7 +3,7 @@
 #include "sensors.h"
 
 SensorData global_data = { -1, -1, -1, -1, -1, -1, -1, -1 };
-
+Config global_config = { -1, -1 ,-1, -1, -1, -1};
 void setup() {
   Serial.begin(9600);
   initSensors();
@@ -19,7 +19,14 @@ void loop() {
   }
 
   Config config = get_config();
-  moveServo(config.servo_base, config.servo_neck);
+
+  if (compare(global_config, config, "servo")) {
+    moveServo(config.servo_base, config.servo_neck);
+    Serial.println("*** Servo config changed !!!");
+    copy(global_config, config);
+    send_capture();
+  }
+  
   // printSensorData(data);
   send_data(data);
 

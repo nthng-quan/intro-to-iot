@@ -9,13 +9,16 @@
 
 extern const char *ssid;
 extern const char *pass;
-extern const char *server_url;
-extern const char *server_url_fire;
-extern const char *web_url;
+
+extern const char* server_url;
+extern const char* nodered_url;
 
 void initWiFi();
 void send_data(const SensorData &data);
+const char* feline(const char* base_url, const char* route);
 void send_notification(const SensorData& data, const int& fire, const String& img_url);
+void send_capture();
+
 String init_check_fire(const SensorData &data);
 String check_fire(const SensorData &data, const int& neck_pos, const int& base_pos);
 Config get_config();

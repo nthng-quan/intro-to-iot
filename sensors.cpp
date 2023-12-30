@@ -27,6 +27,33 @@ void copy(SensorData& dest, const SensorData& src) {
     dest.corrected_ppm = src.corrected_ppm;
 }
 
+bool compare(Config& config1, Config& config2, const String& scope) {
+    if (scope == "servo") {
+        return (
+            config1.servo_base != config2.servo_base ||
+            config1.servo_neck != config2.servo_neck
+        );
+    } else {
+        return (
+            config1.servo_base != config2.servo_base ||
+            config1.servo_neck != config2.servo_neck ||
+            config1.ppm_thrsh != config2.ppm_thrsh ||
+            config1.rzero_thrsh != config2.rzero_thrsh ||
+            config1.temp_thrsh != config2.temp_thrsh ||
+            config1.hum_thrsh != config2.hum_thrsh
+        );
+    }
+}
+
+void copy(Config& dest, const Config& src) {
+    dest.servo_base = src.servo_base;
+    dest.servo_neck = src.servo_neck;
+    dest.ppm_thrsh = src.ppm_thrsh;
+    dest.rzero_thrsh = src.rzero_thrsh;
+    dest.temp_thrsh = src.temp_thrsh;
+    dest.hum_thrsh = src.hum_thrsh;
+}
+
 SensorData readSensorData() {
     SensorData data;
 

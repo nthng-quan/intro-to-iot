@@ -2,11 +2,16 @@
 
 const char *ssid = "24hqiot";
 const char *pass = "26102002";
-const char* server_url = "http://192.168.1.5:5555/system";
-const char* server_url_fire = "http://192.168.1.5:5555/fire";
-const char* server_url_config = "http://192.168.1.5:5555/config";
+// const char* ssid = "hoangtri";
+// const char* pass = "0768136778";
 
-const char* web_url = "http://192.168.1.5:5555/fire"; // IP node-red:
+const char* server_url = "http://192.168.1.5:5555";
+const char* system_route = "/system";
+const char* fire_route = "/fire";
+const char* config_route = "/config";
+const char* capture_route = "/capture";
+
+const char* nodered_url = "http://192.168.1.5:1880/fire"; // IP node-red:
 
 void initWiFi() {
   delay(10);
@@ -24,11 +29,9 @@ void initWiFi() {
 }
 
 DynamicJsonDocument parseJson(const String& jsonString, size_t capacity) {
-  DynamicJsonDocument jsonDoc(capacity); // Adjust the size based on your JSON data
-
+  DynamicJsonDocument jsonDoc(capacity); // Memory pool
   // Deserialize the JSON data
   DeserializationError error = deserializeJson(jsonDoc, jsonString);
-
   // Check for parsing errors
   if (error) {
     Serial.print(F("JSON parsing failed! Error code: "));
@@ -36,6 +39,14 @@ DynamicJsonDocument parseJson(const String& jsonString, size_t capacity) {
   }
 
   return jsonDoc;
+}
+
+const char* feline(const char* base_url, const char* route) {
+    size_t resultLength = strlen(base_url) + strlen(route) + 1;
+    char* result = new char[resultLength];
+    strcpy(result, base_url);
+    strcat(result, route);
+    return result;
 }
 
 String send_request(const char* endpoint, const char* method, String payload) {
@@ -98,12 +109,15 @@ void send_data(const SensorData& data) {
                 "    }\n" +
                 "}\n";
 
-    
-    send_request(server_url, "POST", payload);
+    const char* url_system = feline(server_url, system_route);
+    send_request(url_system, "POST", payload);
+    delete[] url_system;
 }
 
 String init_check_fire(const SensorData &data) {
-    String icf_response = send_request(server_url_fire, "POST", "check");
+    const char* url_fire = feline(server_url, fire_route);
+    String icf_response = send_request(url_fire, "POST", "check");
+    delete[] url_fire;
     return icf_response;
 }
 
@@ -126,12 +140,18 @@ String check_fire(const SensorData& data, const int& base_pos, const int& neck_p
         "        \"base_pos\": " + base_pos + "\n" +
         "    }\n" +
         "}\n";
-    String fire_response = send_request(server_url_fire, "POST", payload);
+    
+    const char* url_fire = feline(server_url, fire_route);
+    String fire_response = send_request(url_fire, "POST", payload);
+    delete[] url_fire;
     return fire_response;
 }
 
 Config get_config() {
-    String config = send_request(server_url_config, "GET", "");
+    const char* url_config = feline(server_url, config_route);
+    String config = send_request(url_config, "GET", "");
+    delete[] url_config;
+
     DynamicJsonDocument config_response = parseJson(config, 256);
     Config config_data = {
         int(config_response["servo_neck"]),
@@ -164,5 +184,11 @@ void send_notification(const SensorData& data, const int& fire, const String& im
                 "    },\n" +
                 "}\n";
     
-    send_request(web_url, "POST", payload);
+    send_request(nodered_url, "POST", payload);
+}
+
+void send_capture() {
+    const char* url = feline(server_url, capture_route);
+    send_request(url, "GET", "");
+    delete[] url;
 }

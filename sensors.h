@@ -38,6 +38,9 @@ SensorData readSensorData();
 bool compare(const SensorData& data1, const SensorData& data2);
 void copy(SensorData& dest, const SensorData& src);
 
+bool compare(Config& config1, Config& config2, const String& scope);
+void copy(Config& dest, const Config& src);
+
 void initSensors();
 void handleLEDAndBuzzer();
 bool check_anomaly(const SensorData& data, const Config& config);
